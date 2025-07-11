@@ -76,7 +76,7 @@ Contributions to the `vacuum_energy` package are welcome. Please submit any issu
 
 ## License
 
-This project is licensed under the MIT License. If you use this package, please cite the reference `arXiv:2507.12345`.
+This project is licensed under the MIT License. If you use this package, please cite the reference `arXiv:update`.
 
 ## Testing
 
