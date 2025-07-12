@@ -1,83 +1,94 @@
 # vacuum_energy
 
+High-precision, reproducible Python package for computing vacuum energy density (\( \rho_{\text{vac}} \)) and Casimir force per unit area, supporting the manuscript *"h como ciclo y evento elemental: Reinterpretación conceptual de la constante de Planck"* (arXiv:). Version 9.2.1 includes enhanced numerical robustness, thermal corrections, and publication-ready figures to address reviewer feedback.
+
 ## Installation
 
-To install the `vacuum_energy` package, you can use pip:
+Install the `vacuum_energy` package via PyPI:
 
-```
-pip install vacuum_energy-8.0-py3-none-any.whl
-```
 
-Alternatively, you can install the development environment by running:
+pip install vacuum-energy==9.2.1
 
-```
+Alternatively, install from source with dependencies:
+bash
 pip install -r requirements.txt
-```
+Usage
 
-## Usage
+The package provides a command-line interface (CLI) for computing ( \rho_{\text{vac}} ), Casimir force, and generating figures. Examples:
 
-Here are some examples of how to use the `vacuum_energy` package:
+    Calculate ( \rho_{\text{vac}} ) with an exponential filter (( \nu_c = 7.275 \times 10^{11} ) Hz):
+    
 
-1. Calculate the vacuum energy density (ρ_vac) with a Gaussian filter (ν_c = 1 × 10¹² Hz):
+python vacuum_energy.py --nu-c 7.275e11 --filter exp
 
-   ```
-   python vacuum_energy.py --nu-c 1e12 --filtro gauss
-   ```
+Generate convergence plot for ( \rho_{\text{vac}} ):
+bash
+python vacuum_energy.py --plot convergence --nu-c 7.275e11
 
-2. Compare the Casimir force in the range of 0.1–1 mm:
+Compare Casimir force (with and without thermal correction) for plate separations 0.05–2 mm:
+bash
+python vacuum_energy.py --plot casimir_abs --d-min 0.05 --d-max 2.0
 
-   ```
-   python vacuum_energy.py --plot casimir_comp --d-min 0.1 --d-max 1.0
-   ```
+Generate all figures with verbose logging:
+bash
+python vacuum_energy.py --generate-all -vv
 
-3. Generate all the figures with verbose logging:
+Show version:
+bash
 
-   ```
-   python vacuum_energy.py --generate-all -vv
-   ```
+    python vacuum_energy.py --version
 
-4. Show the version and exit:
+API
 
-   ```
-   python vacuum_energy.py --version
-   ```
+The package provides functions for vacuum energy and Casimir force calculations:
+python
+from vacuum_energy import (
+    calculate_vacuum_density,
+    calculate_casimir_force,
+    calculate_casimir_force_thermal,
+    calculate_lamb_shift_correction,
+    validate_nu_c
+)
 
-## API
+# Vacuum energy density (J m⁻³)
+rho = calculate_vacuum_density(nu_c_hz=7.275e11, filter_type="exp").value
 
-The package provides a minimal API with the following functions:
+# Casimir force per unit area (Pa, negative = attractive)
+F = calculate_casimir_force(d_m=0.5e-3, nu_c_hz=7.275e11)
 
-```python
-from vacuum_energy import calcular_rho_vacio, calcular_fuerza_casimir
+# Casimir force with thermal correction (T=4 K)
+F_thermal = calculate_casimir_force_thermal(d_m=0.5e-3, nu_c_hz=7.275e11, temp_k=4.0)
 
-rho, err = calcular_rho_vacio(7.275e11)       # ρ_vac in J m⁻³
-F = calcular_fuerza_casimir(0.5e-3, 7.275e11) # force in Pa
-```
+# Lamb shift correction (relative to standard QED)
+lamb_corr = calculate_lamb_shift_correction(nu_c_hz=7.275e11)
 
-## Dependencies
+# Relative deviation of ρ_vac from observed value
+deviation = validate_nu_c(nu_c_hz=7.275e11)
+Features
 
-The package requires the following dependencies:
+    Computations: High-precision ( \rho_{\text{vac}} ), Casimir force (with thermal correction), and Lamb shift correction.
+    Plots: Publication-ready figures (300 DPI, LaTeX style) for Casimir force comparison, sensitivity analysis, ( \rho_{\text{vac}} ) vs. ( \nu_c ), absolute Casimir force, and convergence analysis.
+    Filters: Supports exponential, Gaussian, Lorentzian, and non-local UV suppression filters.
+    Parallelism: Optional joblib for faster computations.
+    Export: Raw data in CSV/TXT for reproducibility.
+    Self-tests: Built-in checks for ( \rho_{\text{vac}} ), Casimir force sign, and Lamb shift correction.
 
-- NumPy ≥ 1.21
-- SciPy ≥ 1.7
-- Matplotlib ≥ 3.8 (optional for `--plot`)
-- joblib ≥ 1.1 (optional)
-- ipywidgets ≥ 8 (optional)
+Dependencies
 
-## Exceptions
+    Required: NumPy ≥ 1.21, SciPy ≥ 1.7
+    Optional: Matplotlib ≥ 3.8 (for --plot), joblib ≥ 1.1 (for parallelism), ipywidgets ≥ 8 (for interactive plots)
 
-The package can raise the following exceptions:
+Exceptions
 
-- `ValueError` – for parameters outside the physical range.
-- `RuntimeError` – for missing required dependencies.
+    VacuumEnergyError: Base error for package issues.
+    InputError: Invalid physical parameters (e.g., non-positive values).
+    MissingDependencyError: Missing optional dependencies for plotting or parallelism.
 
-## Contributing
+Contributing
 
-Contributions to the `vacuum_energy` package are welcome. Please submit any issues or pull requests to the project's repository.
+Contributions are welcome! Please submit issues or pull requests to the GitHub repository. Ensure code adheres to PEP 8 and includes tests in the tests/ directory.
+License
 
-## License
-
-This project is licensed under the MIT License. If you use this package, please cite the reference `arXiv:update`.
-
-## Testing
-
-You can run the package's self-tests by calling the `run_tests()` function, which verifies the reference values and the sign of the force.
+MIT License © 2025 Juan Galaz & collaborators. If used in academic work, please cite:
+text
+Galaz, J. (2025). h como ciclo y evento elemental: Reinterpretación conceptual de la constante de Planck. arXiv:forthcoming
