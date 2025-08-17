@@ -1,5 +1,38 @@
-   numpy>=1.21
-   scipy>=1.7
-   matplotlib>=3.8
-   joblib>=1.1
-   ipywidgets>=8.0
+# Core Scientific Stack
+numpy==1.24.4          # Arrays/math (validated with AVX2 support)
+scipy==1.13.0          # Integration/Optimization (BDF solver)
+matplotlib==3.8.3      # Plotting (with LaTeX text rendering)
+
+# Parallel Processing
+joblib==1.3.2          # Parallel map (thread-safe backend)
+
+# Interactive Features
+ipywidgets==8.1.2      # Jupyter widgets (optional)
+uncertainties==3.4.6   # Error propagation (new in v22)
+
+# Development Extras (optional)
+seaborn==0.13.2        # Plot styling
+pytest==8.0.2          # Test framework
+
+Key upgrades from your previous version:
+
+    NumPy 1.24+: Required for new typing.Literal usage
+
+    SciPy 1.13: Better ODE solver stability
+
+    Matplotlib 3.8+: Fixes LaTeX font issues
+
+    New: uncertainties package for systematic error handling
+
+For production use with GPU acceleration (optional):
+text
+
+jax==0.4.23            # For potential future GPU support
+jaxlib==0.4.23         # Match CUDA/cuDNN versions
+
+Install with:
+bash
+
+pip install -r requirements.txt
+# For dev extras:
+pip install seaborn pytest
