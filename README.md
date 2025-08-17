@@ -1,94 +1,32 @@
-# vacuum_energy
-
-High-precision, reproducible Python package for computing vacuum energy density (\( \rho_{\text{vac}} \)) and Casimir force per unit area, supporting the manuscript *"h como ciclo y evento elemental: Reinterpretación conceptual de la constante de Planck"* (arXiv:). Version 9.2.1 includes enhanced numerical robustness, thermal corrections, and publication-ready figures to address reviewer feedback.
-
-## Installation
-
-Install the `vacuum_energy` package via PyPI:
-
-
-pip install vacuum-energy==9.2.1
-
-Alternatively, install from source with dependencies:
-bash
+vacuum_energy: Scientific Toolkit for Phenomenological QG Modeling (v22.0)High-precision, reproducible Python toolkit for computing vacuum energy density (rho_textvac), Casimir force, and exploring phenomenological quantum gravity models. This package is the computational engine behind the manuscript "h como ciclo y evento elemental: Reinterpretación conceptual de la constante de Planck" (arXiv: [tu-arxiv-id]).Version 22.0 is a major rewrite that addresses a rigorous peer-review process. It evolves beyond a simple calculator into a comprehensive scientific tool, incorporating advanced statistical analysis, physical corrections, and a full suite of publication-ready plotting functions.Novedades en la Versión 22.0Modelo Cuantitativo de Errores Sistemáticos: Implementa un modelo físico para las correcciones de la fuerza de Casimir debido a la rugosidad de la superficie y efectos térmicos.Análisis chi2 Robusto: Compara el modelo teórico (ideal y corregido) contra datos experimentales (Lamoreaux, 1997) usando un ajuste de amplitud para un análisis estadístico riguroso.Validación de la "Tensión de Casimir": Demuestra cuantitativamente cómo la inclusión de correcciones sistemáticas resuelve la tensión entre la nu_c cosmológica y los datos de laboratorio.Suite de Visualización Completa: Genera 13 figuras científicas clave, incluyendo análisis de sensibilidad, convergencia numérica y el desplazamiento predicho en la ventana de búsqueda de axiones.Conexiones con QED: Incluye modelos para calcular la corrección a g−2 y el desplazamiento de Lamb.InstalaciónClona el repositorio e instala las dependencias:git clone https://github.com/[tu-usuario]/vacuum_energy.git
+cd vacuum_energy
 pip install -r requirements.txt
-Usage
-
-The package provides a command-line interface (CLI) for computing ( \rho_{\text{vac}} ), Casimir force, and generating figures. Examples:
-
-    Calculate ( \rho_{\text{vac}} ) with an exponential filter (( \nu_c = 7.275 \times 10^{11} ) Hz):
-    
-
-python vacuum_energy.py --nu-c 7.275e11 --filter exp
-
-Generate convergence plot for ( \rho_{\text{vac}} ):
-bash
-python vacuum_energy.py --plot convergence --nu-c 7.275e11
-
-Compare Casimir force (with and without thermal correction) for plate separations 0.05–2 mm:
-bash
-python vacuum_energy.py --plot casimir_abs --d-min 0.05 --d-max 2.0
-
-Generate all figures with verbose logging:
-bash
-python vacuum_energy.py --generate-all -vv
-
-Show version:
-bash
-
-    python vacuum_energy.py --version
-
-API
-
-The package provides functions for vacuum energy and Casimir force calculations:
-python
-from vacuum_energy import (
+(Nota: requirements.txt debería contener numpy, scipy, matplotlib, y joblib)Uso (Interfaz de Línea de Comandos)El toolkit se controla a través de una potente CLI.Calcular valores y realizar auto-pruebas:python vacuum_energy.py --nu-c 7.275e11
+Generar todas las figuras para el paper:python vacuum_energy.py --generate-all-plots --out ./mis_figuras
+Generar un gráfico específico (ej. análisis chi2) con alta resolución:python vacuum_energy.py --plot chi2_analysis --dpi 600
+Calcular nu_c a partir de un modelo de potencial teórico:python vacuum_energy.py --potential axion
+API PrincipalTambién puedes importar las funciones clave en tus propios scripts.from vacuum_energy import (
     calculate_vacuum_density,
     calculate_casimir_force,
-    calculate_casimir_force_thermal,
-    calculate_lamb_shift_correction,
-    validate_nu_c
+    calculate_casimir_force_corrected,
+    calculate_chi2_casimir,
+    calculate_g2_correction,
+    LAMOREAUX_VALIDATION_DATA
 )
 
-# Vacuum energy density (J m⁻³)
-rho = calculate_vacuum_density(nu_c_hz=7.275e11, filter_type="exp").value
+# Densidad de energía del vacío (J/m³)
+rho_result = calculate_vacuum_density(nu_c_hz=7.275e11)
+print(f"ρ_vac = {rho_result.value:.3e} ± {rho_result.error:.1e} J/m³")
 
-# Casimir force per unit area (Pa, negative = attractive)
-F = calculate_casimir_force(d_m=0.5e-3, nu_c_hz=7.275e11)
+# Fuerza de Casimir con correcciones (Pa)
+F_corr = calculate_casimir_force_corrected(d_m=1e-6, nu_c_hz=7.275e11)
+print(f"Fuerza Corregida (d=1µm) = {F_corr:.3e} Pa")
 
-# Casimir force with thermal correction (T=4 K)
-F_thermal = calculate_casimir_force_thermal(d_m=0.5e-3, nu_c_hz=7.275e11, temp_k=4.0)
-
-# Lamb shift correction (relative to standard QED)
-lamb_corr = calculate_lamb_shift_correction(nu_c_hz=7.275e11)
-
-# Relative deviation of ρ_vac from observed value
-deviation = validate_nu_c(nu_c_hz=7.275e11)
-Features
-
-    Computations: High-precision ( \rho_{\text{vac}} ), Casimir force (with thermal correction), and Lamb shift correction.
-    Plots: Publication-ready figures (300 DPI, LaTeX style) for Casimir force comparison, sensitivity analysis, ( \rho_{\text{vac}} ) vs. ( \nu_c ), absolute Casimir force, and convergence analysis.
-    Filters: Supports exponential, Gaussian, Lorentzian, and non-local UV suppression filters.
-    Parallelism: Optional joblib for faster computations.
-    Export: Raw data in CSV/TXT for reproducibility.
-    Self-tests: Built-in checks for ( \rho_{\text{vac}} ), Casimir force sign, and Lamb shift correction.
-
-Dependencies
-
-    Required: NumPy ≥ 1.21, SciPy ≥ 1.7
-    Optional: Matplotlib ≥ 3.8 (for --plot), joblib ≥ 1.1 (for parallelism), ipywidgets ≥ 8 (for interactive plots)
-
-Exceptions
-
-    VacuumEnergyError: Base error for package issues.
-    InputError: Invalid physical parameters (e.g., non-positive values).
-    MissingDependencyError: Missing optional dependencies for plotting or parallelism.
-
-Contributing
-
-Contributions are welcome! Please submit issues or pull requests to the GitHub repository. Ensure code adheres to PEP 8 and includes tests in the tests/ directory.
-License
-
-MIT License © 2025 Juan Galaz & collaborators. If used in academic work, please cite:
-text
-Galaz, J. (2025). h como ciclo y evento elemental: Reinterpretación conceptual de la constante de Planck. arXiv:forthcoming
+# Análisis estadístico contra datos experimentales
+chi2_red = calculate_chi2_casimir(
+    nu_c_hz=7.275e11,
+    data=LAMOREAUX_VALIDATION_DATA,
+    use_corrections=True
+)
+print(f"Chi-cuadrado reducido = {chi2_red:.2f}")
+FeaturesCálculos: Densidad de energía de vacío de alta precisión, fuerza de Casimir (ideal y corregida), corrección a g−2 y Lamb shift.Análisis Estadístico: Validación de modelos mediante chi2 contra datos experimentales publicados.Visualización: Generación de más de una docena de figuras de calidad de publicación (PDF/PNG a DPI configurable) con estilo LaTeX.Filtros UV: Soporte para múltiples modelos de supresión (exponencial, gaussiano, lorentziano, no local).Paralelismo: Usa joblib para acelerar los cálculos en CPUs multi-núcleo.Exportación: Guarda los datos crudos de todas las figuras en archivos .txt para una reproducibilidad total.Auto-pruebas: Un sistema de _selftest para verificar la integridad de los cálculos principales.ContribucionesLas contribuciones son bienvenidas. Por favor, abre un issue para discutir cambios o envía un pull request. El código debe seguir el estilo PEP 8.LicenciaMIT License © 2025 Juan Galaz & colaboradores. Si utilizas este código en un trabajo académico, por favor cita nuestro manuscrito:Galaz, J. (2025). "h como ciclo y evento elemental: Reinterpretación conceptual de la constante de Planck". arXiv: [tu-arxiv-id]
