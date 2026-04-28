@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "VacuumPy: A Pedagogical Toolkit for UV-Regularized Vacuum Energy and Casimir Pressure Calculations"
+version: 0.1.0
+authors:
+  - family-names: "Galaz Amengual"
+    given-names: "Juan"
+    orcid: "https://orcid.org/0009-0007-7474-7560"
+abstract: >
+  VacuumPy is a small, tested Python package providing reference
+  implementations of UV-regularized vacuum energy density calculations
+  with multiple filter shapes (exponential, Gaussian, Lorentzian) and
+  the ideal Casimir pressure between parallel plates with leading-order
+  thermal and roughness corrections. The toolkit is intended for use in
+  graduate-level QFT and cosmology courses and as a clean starting
+  point for more sophisticated work.
+keywords:
+  - quantum field theory
+  - vacuum energy
+  - Casimir effect
+  - regularization
+  - physics education
+license: MIT
